@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Starter</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0b0d;--sur:#111318;--sur2:#181c22;
+  --bor:rgba(255,255,255,0.07);--bora:rgba(99,210,190,0.35);
+  --acc:#63d2be;--acc2:#4a9fd4;
+  --txt:#e8eaf0;--mut:#6b7280;--dim:#3d4250;
+  --err:#e05a5a;--wrn:#e8a83a;
+  --mono:'JetBrains Mono',monospace;--disp:'Syne',sans-serif;
+}
+body{background:var(--bg);color:var(--txt);font-family:var(--mono);min-height:100vh}
+*:focus{outline:none}
+a{color:var(--acc2);transition:opacity .15s}a:hover{opacity:.75}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#2a2d35;border-radius:2px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{50%{opacity:0}}
+
+/* Layout */
+#hdr{background:var(--sur);border-bottom:.5px solid var(--bor);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-t{font-family:var(--disp);font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.logo-s{font-size:10px;color:var(--mut);letter-spacing:.06em;margin-top:1px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--acc);animation:pulse 2s infinite;display:inline-block;margin-right:5px}
+.online{display:flex;align-items:center;font-size:10px;color:var(--acc);letter-spacing:.06em}
+.stage{max-width:720px;margin:0 auto;padding:48px 24px;width:100%}
+.stage-w{max-width:900px;margin:0 auto;padding:20px 24px 60px;width:100%}
+
+/* Buttons */
+.btn{background:var(--acc);color:var(--bg);border:none;border-radius:6px;padding:9px 20px;font-family:var(--disp);font-size:12px;font-weight:600;letter-spacing:.08em;cursor:pointer;text-transform:uppercase;transition:all .15s;white-space:nowrap}
+.btn:hover{background:#7de0ce}
+.btn:disabled{background:#1e2128;color:var(--dim);cursor:not-allowed}
+.btn-sec{font-size:11px;color:var(--mut);background:transparent;border:.5px solid var(--bor);border-radius:6px;padding:9px 16px;cursor:pointer;font-family:var(--mono);letter-spacing:.06em;transition:all .15s}
+.btn-sec:hover{color:var(--txt);border-color:var(--bora)}
+.btn-ghost{font-size:10px;color:var(--mut);background:transparent;border:.5px solid var(--bor);border-radius:5px;padding:5px 12px;cursor:pointer;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;transition:all .15s}
+.btn-ghost:hover{color:var(--txt);border-color:var(--bora)}
+.cpbtn{font-family:var(--mono);font-size:9px;letter-spacing:.08em;padding:2px 8px;border-radius:3px;cursor:pointer;background:transparent;border:.5px solid rgba(255,255,255,.1);color:var(--dim);transition:all .15s;white-space:nowrap;flex-shrink:0}
+.cpbtn:hover,.cpbtn.ok{color:var(--acc);border-color:var(--bora)}
+.xbtn{font-size:10px;color:var(--err);background:transparent;border:none;cursor:pointer;font-family:var(--mono)}
+.expbtn{font-size:10px;color:var(--mut);background:#181c22;border:.5px solid var(--bor);border-radius:4px;padding:4px 10px;cursor:pointer;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;transition:all .15s}
+.expbtn:hover{color:var(--acc);border-color:var(--bora)}
+
+/* Cards */
+.card{background:var(--sur);border:.5px solid var(--bor);border-radius:10px;padding:24px;margin-bottom:14px}
+.card-a{border-color:rgba(99,210,190,.2)}
+.ibar{font-size:11px;color:var(--mut);line-height:1.7;background:var(--sur);border-radius:8px;padding:12px 16px;border:.5px solid rgba(255,255,255,.06);margin-bottom:10px}
+
+/* Forms */
+textarea.rq{width:100%;background:transparent;border:none;color:var(--txt);font-family:var(--disp);font-size:14px;padding:0;resize:none;line-height:1.7;letter-spacing:-.01em}
+textarea.rq::placeholder{color:var(--dim)}
+textarea.pa{width:100%;background:var(--bg);border:.5px solid rgba(255,255,255,.08);border-radius:6px;padding:10px 12px;color:#a0a8b8;font-size:11px;resize:vertical;line-height:1.6;font-family:var(--mono)}
+textarea.pa::placeholder{color:var(--dim)}
+textarea.pt{width:100%;background:var(--sur);border:.5px solid rgba(255,255,255,.06);border-radius:6px;padding:10px 12px;color:#a0a8b8;font-size:10px;resize:none;line-height:1.6;font-family:var(--mono)}
+select.disc{background:var(--bg);border:.5px solid rgba(255,255,255,.08);border-radius:5px;padding:6px 10px;color:var(--dim);font-family:var(--mono);font-size:11px;cursor:pointer;flex:1}
+select.disc option{background:var(--sur);color:var(--txt)}
+.fl{font-size:9px;letter-spacing:.14em;color:var(--acc);text-transform:uppercase;margin-bottom:10px}
+.sl{font-size:9px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.cf{border-top:.5px solid rgba(255,255,255,.05);padding-top:14px;margin-top:14px;display:flex;align-items:center;gap:10px}
+.err{font-size:10px;color:var(--err);margin-top:6px;display:none}
+.hint{font-size:10px;color:var(--dim);margin-top:8px;display:none}
+
+/* Landing */
+.hero{text-align:center;margin-bottom:40px}
+.hero h1{font-family:var(--disp);font-size:32px;font-weight:700;letter-spacing:-.02em;margin-bottom:10px}
+.hero p{font-size:12px;color:var(--mut);line-height:2;letter-spacing:.06em}
+.how{background:var(--sur);border:.5px solid rgba(99,210,190,.1);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+.step{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px}
+.step:last-child{margin-bottom:0}
+.sn{font-size:10px;color:var(--acc);font-weight:600;min-width:14px}
+.st{font-size:11px;color:var(--mut);line-height:1.5}
+.fg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.fc{background:var(--sur);border:.5px solid rgba(255,255,255,.05);border-radius:8px;padding:12px 14px}
+.ft{font-size:11px;font-family:var(--disp);font-weight:600;color:var(--txt);margin-bottom:5px}
+.fd{font-size:10px;color:var(--dim);line-height:1.6}
+
+/* Prompt stage */
+.wcard{background:var(--sur);border:.5px solid var(--bora);border-radius:10px;padding:24px}
+.wh{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.wd{width:8px;height:8px;border-radius:50%;background:var(--acc);animation:pulse 1.5s infinite}
+.wt{font-size:11px;color:var(--acc);letter-spacing:.1em;text-transform:uppercase}
+.step-box{border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.step-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.rqp{background:var(--bg);border-radius:6px;padding:8px 12px;border:.5px solid rgba(255,255,255,.05);margin-bottom:10px;font-size:10px;color:var(--dim);line-height:1.6;font-style:italic}
+
+/* Ready stage */
+.rqs{background:var(--sur);border-radius:8px;padding:10px 14px;border:.5px solid rgba(255,255,255,.05);margin-bottom:12px;font-size:11px;color:var(--mut);line-height:1.6}
+.rql{font-size:9px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-right:10px}
+.ts{font-size:11px;color:var(--mut);line-height:1.7;margin-bottom:16px}
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tab{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:5px;cursor:pointer;transition:all .15s;background:transparent;border:.5px solid var(--bor);color:var(--mut)}
+.tab.on{background:rgba(99,210,190,.1);border-color:var(--bora);color:var(--acc)}
+.tab:hover:not(.on){color:var(--txt);border-color:rgba(255,255,255,.15)}
+
+/* DB strategy */
+.dbc{background:var(--sur);border:.5px solid rgba(255,255,255,.06);border-radius:8px;overflow:hidden;margin-bottom:8px;transition:border-color .2s}
+.dbc.open{border-color:rgba(99,210,190,.2)}
+.dbh{width:100%;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:transparent;border:none;cursor:pointer;text-align:left}
+.dbdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dbn{font-family:var(--disp);font-size:13px;font-weight:600;color:var(--txt);margin:0 10px}
+.dba{font-size:9px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.dbm{display:flex;align-items:center;gap:10px}
+.dbb{padding:0 16px 16px;border-top:.5px solid rgba(255,255,255,.05);display:none}
+.dbc.open .dbb{display:block}
+.dbd{font-size:11px;color:var(--mut);margin-bottom:12px;padding-top:12px;line-height:1.6}
+.si{background:var(--bg);border-radius:6px;padding:10px 12px;border:.5px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px}
+.st2{font-size:11px;color:#a0a8b8;line-height:1.6;flex:1;word-break:break-word}
+.sn2{color:var(--dim);margin-right:6px}
+.jtags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.jtag{font-size:10px;padding:3px 8px;border:.5px solid var(--bor);border-radius:3px;color:var(--mut)}
+.tlinks{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.tlink{font-size:11px;color:var(--acc2);display:flex;align-items:center;gap:6px}
+
+/* Authors */
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.ac{background:var(--sur);border:.5px solid rgba(255,255,255,.06);border-radius:8px;padding:12px 14px}
+.an{font-family:var(--disp);font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px}
+.af{font-size:11px;color:var(--mut);margin-bottom:6px;line-height:1.5}
+.aw{font-size:10px;color:var(--dim);margin-bottom:10px;font-style:italic;line-height:1.4}
+.afoot{display:flex;justify-content:space-between;align-items:center}
+.fwc{background:var(--sur);border:.5px solid rgba(99,210,190,.15);border-radius:8px;padding:14px 16px;margin-top:12px}
+.fwi{margin-bottom:14px;padding-bottom:14px;border-bottom:.5px solid rgba(255,255,255,.05)}
+.fwi:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.fwn{font-size:12px;font-weight:500;color:var(--txt);margin-bottom:3px;font-family:var(--disp)}
+.fwd{font-size:11px;color:var(--mut);line-height:1.6;margin-bottom:4px}
+.fwr{font-size:10px;color:var(--acc2)}
+
+/* Progress/tracking */
+.pbw{background:var(--sur);border:.5px solid var(--bor);border-radius:8px;padding:12px 16px;margin-bottom:14px}
+.pbr{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.pbl{font-size:9px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;white-space:nowrap}
+.pbt{flex:1;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.pbf{height:100%;background:var(--acc);border-radius:2px;transition:width .4s ease}
+.pbs{display:flex;gap:14px;flex-wrap:wrap}
+.ps{font-size:10px;display:flex;align-items:center;gap:5px}
+.pd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.fr{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.fp{font-size:10px;padding:4px 10px;border-radius:4px;cursor:pointer;border:.5px solid var(--bor);background:transparent;color:var(--mut);font-family:var(--mono);letter-spacing:.06em;transition:all .15s}
+.fp.on{border-color:var(--bora);color:var(--acc);background:rgba(99,210,190,.08)}
+.ic{display:flex;gap:4px;flex-shrink:0;align-items:center}
+.sb{font-size:9px;padding:2px 7px;border-radius:3px;cursor:pointer;font-family:var(--mono);letter-spacing:.05em;transition:all .15s;background:transparent;border:.5px solid rgba(255,255,255,.07);color:var(--dim);white-space:nowrap}
+.sb:hover{opacity:.8}
+.sb.sdone{background:rgba(99,210,190,.1);border-color:rgba(99,210,190,.3);color:#63d2be}
+.sb.sfoc{background:rgba(232,168,58,.1);border-color:rgba(232,168,58,.3);color:#e8a83a}
+.idone{opacity:.28;transition:opacity .2s}
+.ifoc{outline:1px solid rgba(232,168,58,.35);outline-offset:2px;border-radius:6px}
+.fbadge{display:none;font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(232,168,58,.12);border:.5px solid rgba(232,168,58,.25);color:#e8a83a;letter-spacing:.06em;margin-left:6px;vertical-align:middle}
+
+/* Source cards */
+.sc{background:var(--sur);border:.5px solid rgba(255,255,255,.06);border-radius:8px;padding:12px 14px 12px 18px;position:relative;overflow:hidden;margin-bottom:8px;animation:fadeUp .25s ease both}
+.sac{position:absolute;left:0;top:0;bottom:0;width:2px}
+.stop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px}
+.sti{font-family:var(--disp);font-size:12px;font-weight:600;color:var(--txt);flex:1;line-height:1.4}
+.sbgs{display:flex;gap:6px;flex-shrink:0}
+.bdg{font-size:9px;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.sm{font-size:10px;color:var(--mut);margin-bottom:6px}
+.ss{font-size:11px;color:var(--mut);line-height:1.65;margin-bottom:6px}
+.sf{font-size:10px;color:var(--acc2)}
+.sg{font-size:10px;color:var(--dim);margin-top:4px;font-style:italic}
+
+/* Citation switcher */
+.citb{margin-top:8px;padding-top:8px;border-top:.5px solid rgba(255,255,255,.05)}
+.citrow{display:flex;gap:5px;margin-bottom:6px}
+.cfb{font-size:9px;padding:2px 7px;border-radius:3px;cursor:pointer;font-family:var(--mono);letter-spacing:.08em;background:transparent;border:.5px solid rgba(255,255,255,.08);color:var(--dim);transition:all .15s}
+.cfb:hover{color:var(--mut)}
+.cfb.ca{background:rgba(99,210,190,.1);border-color:rgba(99,210,190,.35);color:var(--acc)}
+.ctext{display:none;justify-content:space-between;align-items:flex-start;gap:8px}
+.ctext.show{display:flex}
+.ct{font-size:10px;color:var(--dim);font-family:var(--mono);flex:1;line-height:1.5}
+
+/* Bib tab */
+.bss{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.bsn{font-family:var(--disp);font-size:20px;font-weight:600;color:var(--txt);margin-bottom:2px}
+.bsl{font-size:9px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.brec{font-size:10px;padding:4px 10px;border-radius:3px;display:inline-block;margin-bottom:6px}
+.rk{background:rgba(99,210,190,.08);border:.5px solid rgba(99,210,190,.25);color:#63d2be}
+.rx{background:rgba(232,168,58,.08);border:.5px solid rgba(232,168,58,.25);color:#e8a83a}
+.rr{background:rgba(224,90,90,.08);border:.5px solid rgba(224,90,90,.25);color:#e05a5a}
+.bann{font-size:11px;color:var(--mut);line-height:1.7;margin-bottom:6px;padding:8px 10px;background:rgba(255,255,255,.02);border-radius:4px;border-left:2px solid rgba(99,210,190,.2)}
+
+/* Settings panel */
+#settings-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-start;justify-content:flex-end}
+#settings-overlay.open{display:flex}
+#settings-panel{background:#111318;width:300px;height:100vh;border-left:.5px solid rgba(255,255,255,.1);padding:0;display:flex;flex-direction:column;animation:slideIn .2s ease}
+@keyframes slideIn{from{transform:translateX(300px)}to{transform:translateX(0)}}
+#settings-panel h2{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#e8eaf0;padding:18px 20px 14px;border-bottom:.5px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center}
+.settings-close{background:transparent;border:none;color:#6b7280;font-size:18px;cursor:pointer;line-height:1;padding:0}
+.settings-close:hover{color:#e8eaf0}
+.settings-body{flex:1;overflow-y:auto;padding:8px 0}
+.settings-section{padding:8px 20px 4px;font-size:9px;letter-spacing:.12em;color:#3d4250;text-transform:uppercase;margin-top:8px}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:.5px solid rgba(255,255,255,.04)}
+.settings-row:last-child{border-bottom:none}
+.settings-label{font-size:12px;color:#e8eaf0;font-family:'Syne',sans-serif}
+.settings-sub{font-size:10px;color:#6b7280;margin-top:2px}
+
+/* iPhone toggle */
+.tog{position:relative;width:44px;height:26px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tog-slider{position:absolute;inset:0;background:#2a2d35;border-radius:26px;cursor:pointer;transition:background .2s}
+.tog-slider::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.tog input:checked + .tog-slider{background:#63d2be}
+.tog input:checked + .tog-slider::before{transform:translateX(18px)}
+
+/* Gear button */
+.gear-btn{background:transparent;border:.5px solid rgba(255,255,255,.07);border-radius:5px;padding:5px 10px;cursor:pointer;color:#6b7280;font-size:15px;line-height:1;transition:all .15s}
+.gear-btn:hover{color:#e8eaf0;border-color:rgba(99,210,190,.35)}
+
+</style>
+</head>
+<body>
+<div id="hdr">
+  <div class="logo">
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+      <rect x="1" y="1" width="26" height="26" rx="4" stroke="#63d2be" stroke-width="1.5"/>
+      <circle cx="14" cy="14" r="5" stroke="#63d2be" stroke-width="1.5"/>
+      <circle cx="14" cy="14" r="2" fill="#63d2be"/>
+    </svg>
+    <div>
+      <div class="logo-t">Research Starter</div>
+      <div class="logo-s">Graduate Research Intelligence Engine &middot; Free &middot; No API Key &middot; <span style="color:#63d2be">by Stefan R.</span></div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="btn-ghost" id="btn-new" style="display:none" onclick="goLanding()">&#8592; New Query</button>
+    <button class="gear-btn" onclick="openSettings()" title="Settings">&#9881;</button>
+    <div class="online"><span class="dot"></span>CLAUDE READY</div>
+  </div>
+</div>
+
+<!-- LANDING -->
+<div id="s-land" class="stage">
+  <div class="hero">
+    <h1>Research Starter</h1>
+    <p>Graduate Capstone Research Intelligence Engine<br>
+    <span style="color:var(--dim);font-size:11px">Paste your research question &rarr; get database search strings,<br>key authors, theoretical frameworks, and source analysis.</span></p>
+  </div>
+  <div class="card card-a">
+    <div class="fl">Research Question</div>
+    <textarea class="rq" id="rq" rows="5" placeholder="Paste your full research question here. The more specific the better — include theoretical focus, geographic scope, time period, and key actors..."></textarea>
+    <div class="cf">
+      <select class="disc" id="disc">
+        <option value="">Discipline (optional)</option>
+        <option>Political Science</option><option>International Relations</option>
+        <option>Security Studies</option><option>Sociology</option>
+        <option>History</option><option>Public Policy</option>
+        <option>Economics</option><option>Law</option>
+        <option>Psychology</option><option>Anthropology</option><option>Other</option>
+      </select>
+      <button class="btn" id="btn-go" disabled onclick="goPrompt()">&#9672; Generate Research Package</button>
+    </div>
+    <div class="hint" id="hint">Keep typing &mdash; need at least 20 characters</div>
+  </div>
+  <div class="how">
+    <div class="fl" style="color:var(--acc)">How it works</div>
+    <div class="step"><span class="sn">1.</span><span class="st">Paste your research question and click Generate Research Package</span></div>
+    <div class="step"><span class="sn">2.</span><span class="st">Your prompt is copied automatically &mdash; paste it into <a href="https://claude.ai" target="_blank">claude.ai</a> and wait for the response</span></div>
+    <div class="step"><span class="sn">3.</span><span class="st">Copy Claude&rsquo;s full response and paste it back here &mdash; click Load</span></div>
+    <div class="step"><span class="sn">4.</span><span class="st">Browse search strings, authors, frameworks &mdash; paste sources to analyze and score</span></div>
+  </div>
+  <div class="fg">
+    <div class="fc"><div class="ft">Database Strings</div><div class="fd">Boolean search strings for 7 databases, formatted per each system&rsquo;s syntax</div></div>
+    <div class="fc"><div class="ft">Authors &amp; Frameworks</div><div class="fd">Key scholars, theoretical frameworks, and citation chains for your topic</div></div>
+    <div class="fc"><div class="ft">Source Analyzer</div><div class="fd">Paste sources &mdash; Claude scores credibility, relevance, generates citations in APA, Chicago, MLA, Harvard</div></div>
+  </div>
+</div>
+
+<!-- PROMPT STAGE -->
+<div id="s-prompt" class="stage" style="display:none">
+  <div class="wcard">
+    <div class="wh"><div class="wd"></div><div class="wt">Prompt Ready</div></div>
+    <div class="step-box" style="background:rgba(99,210,190,.06);border:.5px solid rgba(99,210,190,.2)">
+      <div class="step-lbl" style="color:var(--acc)">Step 1 &mdash; Prompt copied to clipboard automatically</div>
+      <div style="font-size:11px;color:var(--mut);line-height:1.7;margin-bottom:10px">
+        Your prompt was copied when you clicked Generate.
+        If claude.ai didn&rsquo;t open automatically, <a href="https://claude.ai" target="_blank" style="color:var(--acc)">click here to open it &uarr;</a>.<br>
+        Paste the prompt, wait for Claude to finish, then copy Claude&rsquo;s <em>entire</em> response.
+      </div>
+      <textarea class="pt" id="gen-prompt" rows="3" readonly onclick="this.select()" style="cursor:pointer;margin-bottom:8px"></textarea>
+      <button class="btn" id="btn-recopy" onclick="recopy()" style="width:100%;padding:10px">&#8679; Copy Prompt Again</button>
+    </div>
+    <div class="step-box" style="background:var(--sur2);border:.5px solid var(--bor);margin-top:0">
+      <div class="step-lbl" style="color:var(--mut)">Step 2 &mdash; Paste Claude&rsquo;s response here</div>
+      <textarea class="pa" id="paste-resp" rows="8" placeholder="Paste Claude's full response here — everything from { to the final }"></textarea>
+      <div class="err" id="err-load"></div>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <button class="btn" id="btn-load" onclick="loadResp()" disabled style="flex:1;padding:10px">&#9672; Load Research Package</button>
+        <button class="btn-sec" onclick="goLanding()">&#8592; Back</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- READY STAGE -->
+<div id="s-ready" class="stage-w" style="display:none">
+  <div class="rqs"><span class="rql">RQ</span><span id="rq-disp"></span></div>
+  <div class="ts" id="ts"></div>
+  <div class="pbw" id="pbw" style="display:none">
+    <div class="pbr">
+      <span class="pbl">Progress</span>
+      <div class="pbt"><div class="pbf" id="pbf" style="width:0%"></div></div>
+      <div class="pbs">
+        <span class="ps"><span class="pd" style="background:#63d2be"></span><span id="st-done">0 done</span></span>
+        <span class="ps"><span class="pd" style="background:#e8a83a"></span><span id="st-foc">0 focus</span></span>
+        <span class="ps"><span class="pd" style="background:#3d4250"></span><span id="st-pend">0 pending</span></span>
+      </div>
+    </div>
+    <div class="fr">
+      <span style="font-size:9px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-right:4px">Show:</span>
+      <button class="fp on" data-f="all" onclick="setFilter('all',this)">All</button>
+      <button class="fp" data-f="focus" onclick="setFilter('focus',this)">&#9733; Focus</button>
+      <button class="fp" data-f="pending" onclick="setFilter('pending',this)">Pending</button>
+      <button class="fp" data-f="done" onclick="setFilter('done',this)">Done</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" data-tab="strategy" onclick="showTab('strategy',this)">Database Strategy</button>
+    <button class="tab" data-tab="authors" onclick="showTab('authors',this)">Authors &amp; Frameworks</button>
+    <button class="tab" data-tab="analyzer" onclick="showTab('analyzer',this)">Source Analyzer</button>
+    <button class="tab" data-tab="bibliography" onclick="showTab('bibliography',this)">Annotated Bibliography</button>
+  </div>
+  <div id="t-strategy"></div>
+  <div id="t-authors" style="display:none"></div>
+  <div id="t-analyzer" style="display:none"></div>
+  <div id="t-bibliography" style="display:none"></div>
+</div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────────
+var S = { rq: '', data: null };
+var tracking = {};
+var activeFilter = 'all';
+
+// ── DB meta ───────────────────────────────────────────────────────────────────
+var DBS = [
+  {id:'jstor',     name:'JSTOR',          color:'#63d2be', access:'Library Portal', url:'https://www.jstor.org'},
+  {id:'proquest',  name:'ProQuest',        color:'#4a9fd4', access:'Library Portal', url:'https://www.proquest.com'},
+  {id:'ebsco',     name:'EBSCOhost',       color:'#e8a83a', access:'Library Portal', url:'https://search.ebscohost.com'},
+  {id:'wos',       name:'Web of Science',  color:'#c084fc', access:'Library Portal', url:'https://www.webofscience.com'},
+  {id:'scholar',   name:'Google Scholar',  color:'#63d2be', access:'Free',           url:'https://scholar.google.com'},
+  {id:'ssrn',      name:'SSRN',            color:'#e05a5a', access:'Free',           url:'https://www.ssrn.com'},
+  {id:'thinktanks',name:'Think Tanks',     color:'#f97316', access:'Free',           url:''}
+];
+
+// ── Utilities ─────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function credC(c) { return {high:'#63d2be',medium:'#e8a83a',low:'#e05a5a'}[c]||'#3d4250'; }
+function qualC(n) { return n>=8?'#63d2be':n>=6?'#e8a83a':'#e05a5a'; }
+function dl(name, content, type) {
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content],{type:type}));
+  a.download = name; a.click();
+}
+function cp(btn, text) {
+  navigator.clipboard.writeText(text).then(function() {
+    var orig = btn.textContent;
+    btn.textContent = '✓ copied'; btn.classList.add('ok');
+    setTimeout(function(){ btn.textContent = orig; btn.classList.remove('ok'); }, 1400);
+  });
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+function show(id) {
+  ['s-land','s-prompt','s-ready'].forEach(function(s){ document.getElementById(s).style.display='none'; });
+  document.getElementById(id).style.display = 'block';
+  document.getElementById('btn-new').style.display = id==='s-ready'?'inline-block':'none';
+}
+function goLanding() { show('s-land'); }
+
+// ── Landing ───────────────────────────────────────────────────────────────────
+document.getElementById('rq').addEventListener('input', function() {
+  var n = this.value.trim().length;
+  document.getElementById('btn-go').disabled = n < 20;
+  var h = document.getElementById('hint');
+  h.style.display = (n>0&&n<20)?'block':'none';
+});
+document.getElementById('paste-resp').addEventListener('input', function() {
+  document.getElementById('btn-load').disabled = this.value.trim().length < 10;
+});
+
+function goPrompt() {
+  var rq = document.getElementById('rq').value.trim();
+  var field = document.getElementById('disc').value;
+  if (rq.length < 20) return;
+  S.rq = rq;
+  var prompt = buildPrompt(rq, field);
+  document.getElementById('gen-prompt').value = prompt;
+  navigator.clipboard.writeText(prompt).then(function() {
+    var btn = document.getElementById('btn-go');
+    btn.textContent = '✓ Copied — Opening Claude...';
+    btn.style.background = '#3d9e8e';
+    setTimeout(function(){ window.open('https://claude.ai','_blank'); }, 300);
+    setTimeout(function(){ show('s-prompt'); btn.textContent='◈ Generate Research Package'; btn.style.background=''; }, 800);
+  }).catch(function() {
+    show('s-prompt');
+  });
+}
+
+function recopy() {
+  var text = document.getElementById('gen-prompt').value;
+  navigator.clipboard.writeText(text).then(function() {
+    var b = document.getElementById('btn-recopy');
+    b.textContent = '✓ Copied!';
+    setTimeout(function(){ b.textContent = '↑ Copy Prompt Again'; }, 2000);
+  });
+}
+
+function buildPrompt(rq, field) {
+  var disc = field ? ' studying ' + field : '';
+  return 'You are an expert academic research librarian. A graduate student' + disc + ' has this research question:\n\n"' + rq + '"\n\nReturn a single raw JSON object — no markdown, no explanation, just the JSON.\n\nRequired keys:\n- "rq": the research question\n- "topic_summary": 2 sentences on scope and key themes\n- "databases": object with keys jstor, proquest, ebsco, wos, scholar, ssrn, thinktanks. Each has "description" (1 sentence), "strings" (array of search strings in that database\'s syntax), "journals" (array of journal names, empty for scholar/ssrn/thinktanks). thinktanks also has "links" array of {"name","url"} for 6 real policy institutes. String counts: jstor=5, proquest=5, ebsco=5, wos=4, scholar=5, ssrn=3.\n- "authors": array of 8 objects each with "name", "focus", "key_work", "search_query"\n- "frameworks": array of 5 objects each with "name", "description", "relevance"\n\nAll content must be specific to the research question. Return only the JSON.';
+}
+
+// ── Load response ─────────────────────────────────────────────────────────────
+function loadResp() {
+  var raw = document.getElementById('paste-resp').value.trim();
+  var errEl = document.getElementById('err-load');
+  errEl.style.display = 'none';
+  if (!raw) { errEl.textContent = 'Nothing pasted yet.'; errEl.style.display='block'; return; }
+  try {
+    var s = raw.indexOf('{'), e = raw.lastIndexOf('}');
+    if (s===-1) throw new Error('No JSON object found — copy Claude\'s full response');
+    var parsed = JSON.parse(raw.slice(s, e+1));
+    if (!parsed.databases) throw new Error('Response looks incomplete — make sure you copied everything');
+    S.data = parsed;
+    renderReady();
+  } catch(ex) {
+    errEl.textContent = 'Error: ' + ex.message;
+    errEl.style.display = 'block';
+  }
+}
+
+// ── Ready ─────────────────────────────────────────────────────────────────────
+function renderReady() {
+  loadTracking();
+  document.getElementById('rq-disp').textContent = S.rq;
+  var ts = document.getElementById('ts');
+  if (S.data.topic_summary) { ts.innerHTML = '<span style="color:var(--acc)">&#8250; </span>'+esc(S.data.topic_summary); ts.style.display='block'; }
+  else ts.style.display='none';
+  document.getElementById('pbw').style.display = 'block';
+  renderStrategy();
+  renderAuthors();
+  renderAnalyzer();
+  renderBibliography();
+  show('s-ready');
+  showTab('strategy', document.querySelector('.tab.on'));
+  setTimeout(loadSettings, 50);
+}
+
+function showTab(name, btn) {
+  ['strategy','authors','analyzer','bibliography'].forEach(function(t){
+    document.getElementById('t-'+t).style.display = t===name?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach(function(b){ b.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+  setTimeout(rerender, 0);
+}
+
+// ── Tracking ──────────────────────────────────────────────────────────────────
+function loadTracking() {
+  try { var t=localStorage.getItem('syn_track'); if(t) tracking=JSON.parse(t); } catch(e){}
+}
+function saveTracking() {
+  try { localStorage.setItem('syn_track', JSON.stringify(tracking)); } catch(e){}
+}
+function setStatus(key, status) {
+  tracking[key] = tracking[key]===status ? 'pending' : status;
+  saveTracking(); rerender();
+}
+function rerender() {
+  document.querySelectorAll('[data-tk]').forEach(function(el) {
+    var k = el.dataset.tk, s = tracking[k]||'pending';
+    el.classList.toggle('idone', s==='done');
+    el.classList.toggle('ifoc', s==='focus');
+    var db = el.querySelector('.sb[data-act="done"]');
+    var fb = el.querySelector('.sb[data-act="focus"]');
+    var badge = el.querySelector('.fbadge');
+    if(db){ db.classList.toggle('sdone',s==='done'); db.textContent=s==='done'?'✓ done':'done'; }
+    if(fb){ fb.classList.toggle('sfoc',s==='focus'); fb.textContent=s==='focus'?'★ focus':'focus'; }
+    if(badge) badge.style.display=s==='focus'?'inline-block':'none';
+    var filt = activeFilter;
+    if(filt==='done') el.style.display=s==='done'?'':'none';
+    else if(filt==='focus') el.style.display=s==='focus'?'':'none';
+    else if(filt==='pending') el.style.display=s==='pending'?'':'none';
+    else el.style.display='';
+  });
+  updateProgress();
+}
+function updateProgress() {
+  var all = document.querySelectorAll('[data-tk]');
+  var total=all.length, done=0, foc=0;
+  all.forEach(function(el){ var s=tracking[el.dataset.tk]||'pending'; if(s==='done')done++; if(s==='focus')foc++; });
+  var pct = total ? Math.round((done/total)*100) : 0;
+  var pf=document.getElementById('pbf'), sd=document.getElementById('st-done'), sf=document.getElementById('st-foc'), sp=document.getElementById('st-pend');
+  if(pf) pf.style.width=pct+'%';
+  if(sd) sd.textContent=done+' done';
+  if(sf) sf.textContent=foc+' focus';
+  if(sp) sp.textContent=(total-done-foc)+' pending';
+}
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.fp').forEach(function(b){ b.classList.toggle('on',b.dataset.f===f); });
+  rerender();
+}
+function mkCtrl(key) {
+  return '<div class="ic"><button class="sb" data-act="done" onclick="setStatus(\''+key+'\',\'done\')">done</button><button class="sb" data-act="focus" onclick="setStatus(\''+key+'\',\'focus\')">focus</button></div>';
+}
+
+// ── Strategy ──────────────────────────────────────────────────────────────────
+function renderStrategy() {
+  var d = S.data;
+  var h = '<div class="ibar"><span style="color:var(--acc)">&#8250; </span>Target: <span style="color:var(--txt)">50+ peer-reviewed sources</span> across 7 databases. Copy strings exactly &mdash; Boolean operators are case-sensitive.</div>';
+  DBS.forEach(function(db) {
+    var dd = (d.databases&&d.databases[db.id])||{};
+    var strings = dd.strings||[], journals = dd.journals||[], links = dd.links||[], desc = dd.description||'';
+    h += '<div class="dbc" id="dbc-'+db.id+'">';
+    h += '<button class="dbh" onclick="toggleDb(\''+db.id+'\')">';
+    h += '<div style="display:flex;align-items:center"><div class="dbdot" style="background:'+db.color+'"></div><span class="dbn">'+esc(db.name)+'</span><span class="dba">'+esc(db.access)+'</span></div>';
+    h += '<div class="dbm">';
+    if(strings.length) h += '<span style="font-size:9px;color:var(--dim)">'+strings.length+' strings</span>';
+    if(db.url) h += '<a style="font-size:9px;color:var(--acc2)" href="'+db.url+'" target="_blank" onclick="event.stopPropagation()">open &#8599;</a>';
+    h += '<span style="font-size:11px;color:var(--dim)" id="chv-'+db.id+'">&#9660;</span>';
+    h += '</div></button>';
+    h += '<div class="dbb">';
+    if(desc) h += '<div class="dbd">'+esc(desc)+'</div>';
+    if(strings.length) {
+      h += '<div class="sl">Boolean Search Strings</div>';
+      strings.forEach(function(s,i) {
+        var key = 'str:'+db.id+':'+i;
+        h += '<div class="si" data-tk="'+key+'">';
+        h += '<div class="st2"><span class="sn2">#'+(i+1)+'</span>'+esc(s)+'<span class="fbadge">FOCUS</span></div>';
+        h += '<div class="ic"><button class="cpbtn" onclick="cp(this,\''+esc(s).replace(/'/g,"\\'")+'\')" >copy</button>'+mkCtrl(key)+'</div>';
+        h += '</div>';
+      });
+    }
+    if(journals.length) {
+      h += '<div class="sl" style="margin-top:12px">Priority Journals</div><div class="jtags">';
+      journals.forEach(function(j){ h += '<span class="jtag">'+esc(j)+'</span>'; });
+      h += '</div>';
+    }
+    if(links.length) {
+      h += '<div class="tlinks">';
+      links.forEach(function(l){ h += '<a class="tlink" href="'+esc(l.url)+'" target="_blank"><span style="color:var(--dim)">&#8250;</span> '+esc(l.name)+'</a>'; });
+      h += '</div>';
+    }
+    h += '</div></div>';
+  });
+  document.getElementById('t-strategy').innerHTML = h;
+}
+
+function toggleDb(id) {
+  var c = document.getElementById('dbc-'+id);
+  var v = document.getElementById('chv-'+id);
+  c.classList.toggle('open');
+  v.innerHTML = c.classList.contains('open')?'&#9650;':'&#9660;';
+}
+
+// ── Authors & Frameworks ──────────────────────────────────────────────────────
+function renderAuthors() {
+  var d = S.data;
+  var authors = d.authors||[], frameworks = d.frameworks||[];
+  var h = '<div class="ibar"><span style="color:var(--acc)">&#8250; </span>Search each author in Google Scholar. Follow citation chains &mdash; find who cites them. This is how you build 50+ sources fast.</div>';
+  if(authors.length) {
+    h += '<div class="sl">Key Scholars</div><div class="ag">';
+    authors.forEach(function(a,i) {
+      var key = 'aut:'+i;
+      var sq = (a.search_query||a.name||'');
+      h += '<div class="ac" data-tk="'+key+'">';
+      h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:4px">';
+      h += '<div class="an">'+esc(a.name)+'<span class="fbadge">FOCUS</span></div>';
+      h += mkCtrl(key);
+      h += '</div>';
+      h += '<div class="af">'+esc(a.focus)+'</div>';
+      if(a.key_work) h += '<div class="aw">'+esc(a.key_work)+'</div>';
+      h += '<div class="afoot"><a href="https://scholar.google.com/scholar?q='+encodeURIComponent(sq)+'" target="_blank" style="font-size:10px;color:var(--acc2)">search &#8599;</a>';
+      h += '<button class="cpbtn" onclick="cp(this,\''+esc(sq).replace(/'/g,"\\'")+'\')">copy search</button></div>';
+      h += '</div>';
+    });
+    h += '</div>';
+  }
+  if(frameworks.length) {
+    h += '<div class="sl" style="margin-top:16px">Theoretical Frameworks</div><div class="fwc">';
+    frameworks.forEach(function(f,i) {
+      var key = 'fw:'+i;
+      h += '<div class="fwi" data-tk="'+key+'">';
+      h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:3px">';
+      h += '<div class="fwn">'+esc(f.name)+'<span class="fbadge">FOCUS</span></div>';
+      h += mkCtrl(key);
+      h += '</div>';
+      h += '<div class="fwd">'+esc(f.description)+'</div>';
+      if(f.relevance) h += '<div class="fwr">Relevance: '+esc(f.relevance)+'</div>';
+      h += '</div>';
+    });
+    h += '</div>';
+  }
+  document.getElementById('t-authors').innerHTML = h;
+}
+
+// ── Source Analyzer ───────────────────────────────────────────────────────────
+function renderAnalyzer() {
+  var h = '<div class="card" style="margin-bottom:12px">';
+  h += '<div class="sl">Paste Sources</div>';
+  h += '<div style="font-size:11px;color:var(--mut);line-height:1.6;margin-bottom:10px">Paste citations or bibliography exports from any database in any format. Claude will parse, score, and generate citations in APA, Chicago, MLA, and Harvard.</div>';
+  h += '<textarea class="pa" id="src-paste" rows="7" placeholder="Arzheimer, K. (2015). The AfD...&#10;Krause, W. (2020). Shifting Welfare Chauvinism...&#10;...or just titles, one per line."></textarea>';
+  h += '<button class="btn" style="margin-top:10px;width:100%" onclick="genAnalysisPrompt()">&#9672; Generate Analysis Prompt</button>';
+  h += '</div>';
+  h += '<div id="ap-box" style="display:none;background:var(--bg);border:.5px solid rgba(99,210,190,.2);border-radius:8px;padding:16px;margin-bottom:12px">';
+  h += '<div class="sl" style="color:var(--acc);margin-bottom:6px">Analysis Prompt &mdash; Copy Into Claude</div>';
+  h += '<div style="font-size:11px;color:var(--mut);line-height:1.6;margin-bottom:10px">Copy &rarr; paste into <a href="https://claude.ai" target="_blank">claude.ai &uarr;</a> &rarr; copy full response &rarr; paste below.</div>';
+  h += '<div style="position:relative"><textarea class="pt" id="ap-txt" rows="4" readonly onclick="this.select()" style="cursor:pointer"></textarea>';
+  h += '<button class="cpbtn" id="ap-cpbtn" onclick="cp(document.getElementById(\'ap-cpbtn\'),document.getElementById(\'ap-txt\').value)" style="position:absolute;top:8px;right:8px">copy</button></div>';
+  h += '</div>';
+  h += '<div id="ar-box" style="display:none" class="card">';
+  h += '<div class="sl" style="margin-bottom:8px">Paste Claude\'s Analysis Response</div>';
+  h += '<textarea class="pa" id="ar-txt" rows="8" placeholder="Paste Claude\'s full analysis response here..."></textarea>';
+  h += '<div class="err" id="ar-err"></div>';
+  h += '<button class="btn" style="margin-top:10px;width:100%" onclick="loadAnalysis()">&#9672; Load Analysis</button>';
+  h += '</div>';
+  h += '<div id="ar-results"></div>';
+  document.getElementById('t-analyzer').innerHTML = h;
+}
+
+function genAnalysisPrompt() {
+  var sources = document.getElementById('src-paste').value.trim();
+  if(!sources) return;
+  var prompt = 'Analyze these academic sources for this graduate research question. Return ONLY a raw JSON array — no markdown, no explanation.\n\nResearch Question: "' + S.rq + '"\n\nSources:\n' + sources + '\n\nFor each source return:\n{"title":"...","author":"...","year":"...","credibility":"high|medium|low","credibility_score":1-10,"relevance_score":1-10,"relevance_summary":"2 sentences: what it argues and how it contributes to the RQ","theoretical_link":"framework this supports","gaps":"1 sentence on limitations","apa":"APA 7th citation","chicago":"Chicago 17th citation","mla":"MLA 9th citation","harvard":"Harvard citation"}\n\nReturn only the JSON array.';
+  document.getElementById('ap-txt').value = prompt;
+  document.getElementById('ap-box').style.display = 'block';
+  document.getElementById('ar-box').style.display = 'block';
+}
+
+function loadAnalysis() {
+  var raw = document.getElementById('ar-txt').value.trim();
+  var errEl = document.getElementById('ar-err');
+  errEl.style.display = 'none';
+  try {
+    var s = raw.indexOf('['), e = raw.lastIndexOf(']');
+    if(s===-1) throw new Error('No JSON array found');
+    var results = JSON.parse(raw.slice(s,e+1));
+    window._srcResults = results;
+    renderSrcResults(results);
+  } catch(ex) {
+    errEl.textContent = 'Error: ' + ex.message; errEl.style.display='block';
+  }
+}
+
+function renderSrcResults(results) {
+  var h = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
+  h += '<div style="font-size:9px;letter-spacing:.12em;color:var(--acc);text-transform:uppercase">'+results.length+' sources analyzed</div>';
+  h += '<div style="display:flex;gap:8px">';
+  h += '<button class="expbtn" onclick="exportSrcCSV()">CSV</button>';
+  h += '<button class="expbtn" onclick="exportZotero(\'src\')">Zotero RIS</button>';
+  h += '<button class="expbtn" onclick="renderAnalyzer()">+ New Batch</button>';
+  h += '</div></div>';
+  results.forEach(function(s,i) {
+    h += '<div class="sc" style="animation-delay:'+(i*0.04)+'s">';
+    h += '<div class="sac" style="background:'+credC(s.credibility)+'"></div>';
+    h += '<div class="stop"><div class="sti">'+esc(s.title||'Untitled')+'</div>';
+    h += '<div class="sbgs"><span class="bdg" style="background:rgba(99,210,190,.08);border:.5px solid rgba(99,210,190,.2);color:#63d2be">REL '+s.relevance_score+'/10</span>';
+    h += '<span class="bdg" style="background:rgba(255,255,255,.04);border:.5px solid rgba(255,255,255,.08);color:'+credC(s.credibility)+'">CRED '+s.credibility_score+'/10</span></div></div>';
+    h += '<div class="sm">'+esc(s.author||'')+(s.year?' &middot; '+s.year:'')+'</div>';
+    h += '<div class="ss">'+esc(s.relevance_summary||'')+'</div>';
+    if(s.theoretical_link) h += '<div class="sf">Framework: '+esc(s.theoretical_link)+'</div>';
+    if(s.gaps) h += '<div class="sg">Gap: '+esc(s.gaps)+'</div>';
+    h += mkCitBlock(s, 'sc-'+i);
+    h += '</div>';
+  });
+  document.getElementById('ar-results').innerHTML = h;
+}
+
+// ── Bibliography ──────────────────────────────────────────────────────────────
+function renderBibliography() {
+  var h = '<div class="ibar" style="margin-bottom:12px"><span style="color:var(--acc)">&#8250; </span>Paste your annotated bibliography. Claude rates each source on quality and relevance, evaluates your annotations, and recommends Keep / Expand / Replace.</div>';
+  h += '<div class="card" style="margin-bottom:12px">';
+  h += '<div class="sl">Paste Annotated Bibliography</div>';
+  h += '<div style="font-size:11px;color:var(--mut);line-height:1.6;margin-bottom:10px">Paste your full annotated bibliography in any format. Include citation and annotation text.</div>';
+  h += '<textarea class="pa" id="bib-paste" rows="10" placeholder="Smith, J. (2020). Immigration and Identity...&#10;  This article examines...&#10;&#10;Arzheimer, K. (2015). The AfD...&#10;  Arzheimer provides..."></textarea>';
+  h += '<button class="btn" style="margin-top:10px;width:100%" onclick="genBibPrompt()">&#9672; Generate Rating Prompt</button>';
+  h += '</div>';
+  h += '<div id="bp-box" style="display:none;background:var(--bg);border:.5px solid rgba(99,210,190,.2);border-radius:8px;padding:16px;margin-bottom:12px">';
+  h += '<div class="sl" style="color:var(--acc);margin-bottom:6px">Rating Prompt &mdash; Copy Into Claude</div>';
+  h += '<div style="font-size:11px;color:var(--mut);line-height:1.6;margin-bottom:10px">Copy &rarr; paste into <a href="https://claude.ai" target="_blank">claude.ai &uarr;</a> &rarr; copy full response &rarr; paste below.</div>';
+  h += '<div style="position:relative"><textarea class="pt" id="bp-txt" rows="4" readonly onclick="this.select()" style="cursor:pointer"></textarea>';
+  h += '<button class="cpbtn" id="bp-cpbtn" onclick="cp(document.getElementById(\'bp-cpbtn\'),document.getElementById(\'bp-txt\').value)" style="position:absolute;top:8px;right:8px">copy</button></div>';
+  h += '</div>';
+  h += '<div id="br-box" style="display:none" class="card">';
+  h += '<div class="sl" style="margin-bottom:8px">Paste Claude\'s Rating Response</div>';
+  h += '<textarea class="pa" id="br-txt" rows="8" placeholder="Paste Claude\'s full response here..."></textarea>';
+  h += '<div class="err" id="br-err"></div>';
+  h += '<button class="btn" style="margin-top:10px;width:100%" onclick="loadBib()">&#9672; Load Results</button>';
+  h += '</div>';
+  h += '<div id="br-results"></div>';
+  document.getElementById('t-bibliography').innerHTML = h;
+}
+
+function genBibPrompt() {
+  var bib = document.getElementById('bib-paste').value.trim();
+  if(!bib) return;
+  var prompt = 'You are an expert academic research librarian evaluating an annotated bibliography for a graduate capstone.\n\nResearch Question: "' + S.rq + '"\n\nAnnotated Bibliography:\n' + bib + '\n\nFor every source, return a JSON array. Each element:\n{"title":"...","author":"...","year":"...","source_type":"Peer-Reviewed Journal Article|Book|Book Chapter|Government Report|Think Tank Report|Dissertation|Conference Paper|Other","quality_score":1-10,"quality_rationale":"2 sentences on rigor, venue, peer-review status","relevance_score":1-10,"relevance_rationale":"2 sentences on fit to RQ","theoretical_framework":"framework this supports","annotation_assessment":"1-2 sentences: is the annotation descriptive or analytical? Does it connect to the argument?","gaps":"1 sentence on limitations","recommendation":"keep|expand|replace","recommendation_rationale":"1 sentence","priority":"high|medium|low","apa":"APA 7th citation","chicago":"Chicago 17th citation","mla":"MLA 9th citation","harvard":"Harvard citation"}\n\nReturn only the JSON array.';
+  document.getElementById('bp-txt').value = prompt;
+  document.getElementById('bp-box').style.display = 'block';
+  document.getElementById('br-box').style.display = 'block';
+}
+
+function loadBib() {
+  var raw = document.getElementById('br-txt').value.trim();
+  var errEl = document.getElementById('br-err');
+  errEl.style.display = 'none';
+  try {
+    var s = raw.indexOf('['), e = raw.lastIndexOf(']');
+    if(s===-1) throw new Error('No JSON array found');
+    var results = JSON.parse(raw.slice(s,e+1));
+    window._bibResults = results;
+    renderBibResults(results);
+  } catch(ex) {
+    errEl.textContent = 'Error: ' + ex.message; errEl.style.display='block';
+  }
+}
+
+function renderBibResults(results) {
+  var sorted = results.slice().sort(function(a,b){
+    var p={high:0,medium:1,low:2};
+    if(p[a.priority]!==p[b.priority]) return p[a.priority]-p[b.priority];
+    return ((b.quality_score||0)+(b.relevance_score||0))-((a.quality_score||0)+(a.relevance_score||0));
+  });
+  var avgQ=(results.reduce(function(s,r){return s+(r.quality_score||0);},0)/results.length).toFixed(1);
+  var avgR=(results.reduce(function(s,r){return s+(r.relevance_score||0);},0)/results.length).toFixed(1);
+  var rep=results.filter(function(r){return r.recommendation==='replace';}).length;
+  var h = '<div class="bss">';
+  h += '<div class="fc"><div class="bsn">'+results.length+'</div><div class="bsl">Sources Rated</div></div>';
+  h += '<div class="fc"><div class="bsn" style="color:#63d2be">'+avgQ+'</div><div class="bsl">Avg Quality</div></div>';
+  h += '<div class="fc"><div class="bsn" style="color:#4a9fd4">'+avgR+'</div><div class="bsl">Avg Relevance</div></div>';
+  h += '<div class="fc"><div class="bsn" style="color:#e05a5a">'+rep+'</div><div class="bsl">Replace</div></div>';
+  h += '</div>';
+  h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
+  h += '<div style="font-size:9px;letter-spacing:.12em;color:var(--acc);text-transform:uppercase">'+results.length+' sources rated &middot; sorted by priority</div>';
+  h += '<div style="display:flex;gap:8px"><button class="expbtn" onclick="exportBibCSV()">CSV</button><button class="expbtn" onclick="exportZotero(\'bib\')">Zotero RIS</button><button class="expbtn" onclick="renderBibliography()">+ New Upload</button></div>';
+  h += '</div>';
+  sorted.forEach(function(s,i) {
+    var qs=s.quality_score||0, rs=s.relevance_score||0;
+    var rc = s.recommendation==='keep'?'rk':s.recommendation==='expand'?'rx':'rr';
+    var pc = s.priority==='high'?'#63d2be':s.priority==='medium'?'#e8a83a':'#e05a5a';
+    h += '<div class="sc" style="animation-delay:'+(i*0.03)+'s">';
+    h += '<div class="sac" style="background:'+qualC(qs)+'"></div>';
+    h += '<div class="stop"><div class="sti">'+esc(s.title||'Untitled')+'</div>';
+    h += '<div class="sbgs"><span class="bdg" style="background:rgba(99,210,190,.08);border:.5px solid rgba(99,210,190,.2);color:'+qualC(qs)+'">QUAL '+qs+'/10</span>';
+    h += '<span class="bdg" style="background:rgba(74,159,212,.08);border:.5px solid rgba(74,159,212,.2);color:#4a9fd4">REL '+rs+'/10</span>';
+    h += '<span class="bdg" style="background:rgba(255,255,255,.04);border:.5px solid rgba(255,255,255,.08);color:'+pc+'">'+((s.priority||'').toUpperCase())+'</span></div></div>';
+    h += '<div class="sm">'+esc(s.author||'')+(s.year?' &middot; '+s.year:'')+(s.source_type?' &middot; '+s.source_type:'')+'</div>';
+    if(s.quality_rationale) h += '<div style="font-size:10px;color:var(--mut);margin-bottom:4px;line-height:1.5">Quality: '+esc(s.quality_rationale)+'</div>';
+    if(s.relevance_rationale) h += '<div style="font-size:10px;color:var(--mut);margin-bottom:6px;line-height:1.5">Relevance: '+esc(s.relevance_rationale)+'</div>';
+    if(s.annotation_assessment) h += '<div class="bann">'+esc(s.annotation_assessment)+'</div>';
+    if(s.theoretical_framework) h += '<div style="font-size:10px;color:var(--acc2);margin-bottom:4px">Framework: '+esc(s.theoretical_framework)+'</div>';
+    if(s.gaps) h += '<div class="sg">Gap: '+esc(s.gaps)+'</div>';
+    h += '<span class="brec '+rc+'">'+((s.recommendation||'').toUpperCase())+(s.recommendation_rationale?' — '+esc(s.recommendation_rationale):'')+'</span>';
+    h += mkCitBlock(s, 'bc-'+i);
+    h += '</div>';
+  });
+  document.getElementById('br-results').innerHTML = h;
+}
+
+// ── Citation block ────────────────────────────────────────────────────────────
+function mkCitBlock(s, id) {
+  var fmts = ['apa','chicago','mla','harvard'];
+  var h = '<div class="citb">';
+  h += '<div class="citrow">';
+  fmts.forEach(function(f,i){
+    h += '<button class="cfb'+(i===0?' ca':'')+'" onclick="switchCit(\''+id+'\',\''+f+'\',this)">'+(f.toUpperCase())+'</button>';
+  });
+  h += '</div>';
+  fmts.forEach(function(f,i){
+    var txt = esc(s[f]||s.apa||'—');
+    var raw = s[f]||s.apa||'';
+    h += '<div class="ctext'+(i===0?' show':'')+'" data-cid="'+id+'" data-fmt="'+f+'">';
+    h += '<div class="ct">'+txt+'</div>';
+    h += '<button class="cpbtn" onclick="cp(this,\''+raw.replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\')">copy</button>';
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function switchCit(id, fmt, btn) {
+  document.querySelectorAll('[data-cid="'+id+'"]').forEach(function(el){
+    el.classList.toggle('show', el.dataset.fmt===fmt);
+  });
+  if(btn) {
+    var row = btn.closest('.citrow');
+    if(row) row.querySelectorAll('.cfb').forEach(function(b){ b.classList.toggle('ca', b.textContent.toLowerCase()===fmt); });
+  }
+}
+
+// ── Exports ───────────────────────────────────────────────────────────────────
+function exportSrcCSV() {
+  var r = window._srcResults; if(!r) return;
+  var rows = [['Title','Author','Year','Credibility','Cred Score','Relevance Score','Theoretical Link','Gaps','APA','Chicago','MLA','Harvard']];
+  r.forEach(function(s){ rows.push(['"'+(s.title||'').replace(/"/g,'""')+'"','"'+(s.author||'').replace(/"/g,'""')+'"',s.year||'',s.credibility||'',s.credibility_score||'',s.relevance_score||'','"'+(s.theoretical_link||'').replace(/"/g,'""')+'"','"'+(s.gaps||'').replace(/"/g,'""')+'"','"'+(s.apa||'').replace(/"/g,'""')+'"','"'+(s.chicago||'').replace(/"/g,'""')+'"','"'+(s.mla||'').replace(/"/g,'""')+'"','"'+(s.harvard||'').replace(/"/g,'""')+'"']); });
+  dl('sources.csv', rows.map(function(r){return r.join(',');}).join('\n'), 'text/csv');
+}
+
+function exportBibCSV() {
+  var r = window._bibResults; if(!r) return;
+  var rows = [['Title','Author','Year','Type','Quality','Relevance','Priority','Recommendation','Framework','Gaps','APA','Chicago','MLA','Harvard']];
+  r.forEach(function(s){ rows.push(['"'+(s.title||'').replace(/"/g,'""')+'"','"'+(s.author||'').replace(/"/g,'""')+'"',s.year||'','"'+(s.source_type||'').replace(/"/g,'""')+'"',s.quality_score||'',s.relevance_score||'',s.priority||'',s.recommendation||'','"'+(s.theoretical_framework||'').replace(/"/g,'""')+'"','"'+(s.gaps||'').replace(/"/g,'""')+'"','"'+(s.apa||'').replace(/"/g,'""')+'"','"'+(s.chicago||'').replace(/"/g,'""')+'"','"'+(s.mla||'').replace(/"/g,'""')+'"','"'+(s.harvard||'').replace(/"/g,'""')+'"']); });
+  dl('bibliography_rated.csv', rows.map(function(r){return r.join(',');}).join('\n'), 'text/csv');
+}
+
+function exportZotero(type) {
+  var r = type==='bib' ? window._bibResults : window._srcResults;
+  if(!r) return;
+  var ris = r.map(function(s){ return 'TY  - JOUR\nAU  - '+(s.author||'')+'\nTI  - '+(s.title||'')+'\nPY  - '+(s.year||'')+'\nN2  - '+(s.relevance_summary||s.quality_rationale||'')+'\nER  - '; }).join('\n\n');
+  dl(type+'_zotero.ris', ris, 'application/x-research-info-systems');
+}
+
+// ── Settings ──────────────────────────────────────────────────────────────────
+var SETTING_KEYS = ['strategy','authors','frameworks','analyzer','bibliography','tracker','apa','chicago','mla','harvard'];
+
+function loadSettings() {
+  try {
+    var saved = localStorage.getItem('syn_settings');
+    if (saved) {
+      var s = JSON.parse(saved);
+      SETTING_KEYS.forEach(function(k) {
+        var el = document.getElementById('tog-'+k);
+        if (el && s[k] !== undefined) el.checked = s[k];
+      });
+    }
+  } catch(e) {}
+  applySettings();
+}
+
+function saveSettingsState() {
+  try {
+    var s = {};
+    SETTING_KEYS.forEach(function(k) {
+      var el = document.getElementById('tog-'+k);
+      if (el) s[k] = el.checked;
+    });
+    localStorage.setItem('syn_settings', JSON.stringify(s));
+  } catch(e) {}
+}
+
+function applySettings() {
+  saveSettingsState();
+  if (document.getElementById('s-ready').style.display === 'none') return;
+
+  // Tab visibility
+  var tabs = ['strategy','authors','analyzer','bibliography'];
+  var visibleTabs = [];
+  tabs.forEach(function(t) {
+    var tog = document.getElementById('tog-'+t);
+    // Authors tab shows if either scholars or frameworks is on
+    var on;
+    if (t === 'authors') {
+      var a = document.getElementById('tog-authors');
+      var f = document.getElementById('tog-frameworks');
+      on = (a && a.checked) || (f && f.checked);
+    } else {
+      on = tog ? tog.checked : true;
+    }
+    var tabBtn = document.querySelector('.tab[data-tab="'+t+'"]');
+    if (tabBtn) tabBtn.style.display = on ? '' : 'none';
+    if (on) visibleTabs.push(t);
+  });
+
+  // If current active tab got hidden, switch to first visible
+  var activeTab = document.querySelector('.tab.on');
+  if (activeTab && activeTab.style.display === 'none' && visibleTabs.length) {
+    var firstBtn = document.querySelector('.tab[data-tab="'+visibleTabs[0]+'"]');
+    if (firstBtn) firstBtn.click();
+  }
+
+  // Authors section: show/hide scholars vs frameworks within the tab
+  var authorsEl = document.getElementById('t-authors');
+  if (authorsEl) {
+    var scholarsOn = document.getElementById('tog-authors').checked;
+    var fwOn = document.getElementById('tog-frameworks').checked;
+    var grid = authorsEl.querySelector('.ag');
+    var schlabel = authorsEl.querySelector('.sl');
+    var fwcard = authorsEl.querySelector('.fwc');
+    var fwlabel = authorsEl.querySelectorAll('.sl')[1];
+    if (grid) grid.style.display = scholarsOn ? '' : 'none';
+    if (schlabel) schlabel.style.display = scholarsOn ? '' : 'none';
+    if (fwcard) fwcard.style.display = fwOn ? '' : 'none';
+    if (fwlabel) fwlabel.style.display = fwOn ? '' : 'none';
+  }
+
+  // Progress tracker
+  var pbw = document.getElementById('pbw');
+  if (pbw) {
+    var trackerOn = document.getElementById('tog-tracker').checked;
+    pbw.style.display = trackerOn ? 'block' : 'none';
+    // Also hide/show tracking buttons on items
+    document.querySelectorAll('.ic').forEach(function(ic) {
+      ic.style.display = trackerOn ? 'flex' : 'none';
+    });
+  }
+
+  // Citation format buttons
+  var fmts = ['apa','chicago','mla','harvard'];
+  document.querySelectorAll('.cfb').forEach(function(btn) {
+    var fmt = btn.textContent.toLowerCase();
+    var tog = document.getElementById('tog-'+fmt);
+    btn.style.display = (tog && tog.checked) ? '' : 'none';
+  });
+  // Citation text rows
+  fmts.forEach(function(fmt) {
+    var tog = document.getElementById('tog-'+fmt);
+    var on = tog && tog.checked;
+    document.querySelectorAll('.ctext[data-fmt="'+fmt+'"]').forEach(function(el) {
+      if (!on) {
+        el.classList.remove('show');
+        // If this was showing, show next available
+        var block = el.closest('.citb');
+        if (block) {
+          var showing = block.querySelector('.ctext.show');
+          if (!showing) {
+            var next = fmts.find(function(f) {
+              var t2 = document.getElementById('tog-'+f);
+              return t2 && t2.checked;
+            });
+            if (next) {
+              var nxt = block.querySelector('.ctext[data-fmt="'+next+'"]');
+              if (nxt) { nxt.classList.add('show'); }
+              var nxtBtn = block.querySelector('.cfb');
+              block.querySelectorAll('.cfb').forEach(function(b){ b.classList.toggle('ca', b.textContent.toLowerCase()===next); });
+            }
+          }
+        }
+      }
+    });
+  });
+}
+
+function openSettings() {
+  document.getElementById('settings-overlay').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('settings-overlay').classList.remove('open');
+}
+function closeSettingsIfBg(e) {
+  if (e.target === document.getElementById('settings-overlay')) closeSettings();
+}
+function resetSettings() {
+  SETTING_KEYS.forEach(function(k) {
+    var el = document.getElementById('tog-'+k);
+    if (el) el.checked = true;
+  });
+  applySettings();
+}
+
+// Load settings on startup
+loadSettings();
+
+</script>
+
+<!-- Settings Overlay -->
+<div id="settings-overlay" onclick="closeSettingsIfBg(event)">
+  <div id="settings-panel">
+    <h2>Features <button class="settings-close" onclick="closeSettings()">&#10005;</button></h2>
+    <div class="settings-body">
+
+      <div class="settings-section">Tabs</div>
+      <div class="settings-row">
+        <div><div class="settings-label">Database Strategy</div><div class="settings-sub">Search strings for 7 databases</div></div>
+        <label class="tog"><input type="checkbox" id="tog-strategy" checked onchange="applySettings()"><span class="tog-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-label">Key Scholars</div><div class="settings-sub">Authors and citation chains</div></div>
+        <label class="tog"><input type="checkbox" id="tog-authors" checked onchange="applySettings()"><span class="tog-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-label">Theoretical Frameworks</div><div class="settings-sub">Frameworks mapped to your RQ</div></div>
+        <label class="tog"><input type="checkbox" id="tog-frameworks" checked onchange="applySettings()"><span class="tog-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-label">Source Analyzer</div><div class="settings-sub">Score and cite your sources</div></div>
+        <label class="tog"><input type="checkbox" id="tog-analyzer" checked onchange="applySettings()"><span class="tog-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-label">Annotated Bibliography</div><div class="settings-sub">Rate and grade your bibliography</div></div>
+        <label class="tog"><input type="checkbox" id="tog-bibliography" checked onchange="applySettings()"><span class="tog-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-label">Progress Tracker</div><div class="settings-sub">Done / Focus / filter bar</div></div>
+        <label class="tog"><input type="checkbox" id="tog-tracker" checked onchange="applySettings()"><span class="tog-slider"></span></label>
+      </div>
+
+      <div class="settings-section">Citation Formats</div>
+      <div class="settings-row">
+        <div><div class="settings-label">APA 7th</div></div>
+        <label class="tog"><input type="checkbox" id="tog-apa" checked onchange="applySettings()"><span class="tog-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-label">Chicago 17th</div></div>
+        <label class="tog"><input type="checkbox" id="tog-chicago" checked onchange="applySettings()"><span class="tog-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-label">MLA 9th</div></div>
+        <label class="tog"><input type="checkbox" id="tog-mla" checked onchange="applySettings()"><span class="tog-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-label">Harvard</div></div>
+        <label class="tog"><input type="checkbox" id="tog-harvard" checked onchange="applySettings()"><span class="tog-slider"></span></label>
+      </div>
+
+      <div style="padding:20px">
+        <button onclick="resetSettings()" style="width:100%;background:transparent;border:.5px solid rgba(255,255,255,.1);border-radius:6px;padding:8px;color:#6b7280;font-size:11px;cursor:pointer;font-family:'JetBrains Mono',monospace;letter-spacing:.06em;transition:all .15s" onmouseover="this.style.color='#e8eaf0'" onmouseout="this.style.color='#6b7280'">Reset to Defaults</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
